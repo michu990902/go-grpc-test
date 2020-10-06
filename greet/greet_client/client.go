@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	fmt.Println("client test")
+	fmt.Println("Client test")
 	cc, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Cold not connect: %v", err)
