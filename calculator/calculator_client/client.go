@@ -64,29 +64,17 @@ func doPrimeDecomposition(c calculatorpb.CalculatorServiceClient) {
 }
 
 func doComputeAverage(c calculatorpb.CalculatorServiceClient) {
-	requests := []*calculatorpb.ComputeAverageRequest{
-		&calculatorpb.ComputeAverageRequest{
-			Number: 1,
-		},
-		&calculatorpb.ComputeAverageRequest{
-			Number: 2,
-		},
-		&calculatorpb.ComputeAverageRequest{
-			Number: 3,
-		},
-		&calculatorpb.ComputeAverageRequest{
-			Number: 4,
-		},
-	}
-
+	numbers := []int32{1, 2, 3, 4}
 	stream, err := c.ComputeAverage(context.Background())
 	if err != nil {
 		log.Fatalf("Error while calling ComputeAverange: %v\n", err)
 	}
 
-	for _, req := range requests {
-		fmt.Printf("Sending reques: %v\n", req)
-		stream.Send(req)
+	for _, number := range numbers {
+		fmt.Printf("Sending reques: %v\n", number)
+		stream.Send(&calculatorpb.ComputeAverageRequest{
+			Number: number,
+		})
 	}
 
 	res, err := stream.CloseAndRecv()
