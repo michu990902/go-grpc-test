@@ -48,7 +48,7 @@ func (*server) PrimeDecomposition(req *calculatorpb.PrimeDecompositionRequest, s
 }
 
 func (*server) ComputeAverage(stream calculatorpb.CalculatorService_ComputeAverageServer) error {
-	fmt.Printf("Compute Average\n")
+	fmt.Println("Compute Average")
 	result := float64(0)
 	resultQuantity := 0
 
@@ -68,7 +68,31 @@ func (*server) ComputeAverage(stream calculatorpb.CalculatorService_ComputeAvera
 		result += float64(number)
 		resultQuantity++
 	}
+}
 
+func (*server) FindMaximum(stream calculatorpb.CalculatorService_FindMaximumServer) error {
+	fmt.Println("FindMaximum")
+	max := int32(0)
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("Error while reading client stream: %v", err)
+			return err
+		}
+		number := req.GetNumber()
+		if number > max {
+			sendErr := stream.Send(&calculatorpb.FindMaximumResponse{
+				Result: number,
+			})
+			max = number
+			if sendErr != nil {
+				log.Fatalf("Error while sending data to client: %v", sendErr)
+			}
+		}
+	}
 }
 
 func main() {

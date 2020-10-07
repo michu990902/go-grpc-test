@@ -24,8 +24,10 @@ func main() {
 	// doSum(c)
 	// fmt.Println("PrimeDecomposition:")
 	// doPrimeDecomposition(c)
-	fmt.Println("ComputeAverage:")
-	doComputeAverage(c)
+	// fmt.Println("ComputeAverage:")
+	// doComputeAverage(c)
+	fmt.Println("FindMaximum:")
+	doFindMaximum(c)
 }
 
 func doSum(c calculatorpb.CalculatorServiceClient) {
@@ -71,7 +73,7 @@ func doComputeAverage(c calculatorpb.CalculatorServiceClient) {
 	}
 
 	for _, number := range numbers {
-		fmt.Printf("Sending reques: %v\n", number)
+		fmt.Printf("Sending request: %v\n", number)
 		stream.Send(&calculatorpb.ComputeAverageRequest{
 			Number: number,
 		})
@@ -82,4 +84,40 @@ func doComputeAverage(c calculatorpb.CalculatorServiceClient) {
 		log.Fatalf("Error while reciving response from ComputeAverange: %v\n", err)
 	}
 	fmt.Printf("ComputeAverange response: %v\n", res)
+}
+
+func doFindMaximum(c calculatorpb.CalculatorServiceClient) {
+	numbers := []int32{1, 5, 3, 6, 2, 20}
+	stream, err := c.FindMaximum(context.Background())
+	if err != nil {
+		log.Fatalf("Error while calling ComputeAverange: %v\n", err)
+	}
+
+	waitc := make(chan struct{})
+	go func() {
+		for _, number := range numbers {
+			fmt.Printf("Sending request: %v\n", number)
+			stream.Send(&calculatorpb.FindMaximumRequest{
+				Number: number,
+			})
+		}
+		stream.CloseSend()
+	}()
+
+	go func() {
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("Error while receiving: %v\n", err)
+				break
+			}
+			fmt.Printf("Received: %v\n", res.GetResult())
+		}
+		close(waitc)
+	}()
+
+	<-waitc
 }
