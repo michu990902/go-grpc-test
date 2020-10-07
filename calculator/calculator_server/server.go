@@ -12,17 +12,38 @@ import (
 
 type server struct{}
 
-func (*server) CalculatorAdd(ctx context.Context, req *calculatorpb.CalculatorRequest) (*calculatorpb.CalculatorResponse, error) {
-	fmt.Printf("Add tow numbers: %v", req)
+func (*server) Sum(ctx context.Context, req *calculatorpb.SumRequest) (*calculatorpb.SumResponse, error) {
+	fmt.Printf("Sum: %v\n", req)
 	a := req.GetA()
 	b := req.GetB()
 	result := a + b
 
-	res := &calculatorpb.CalculatorResponse{
+	res := &calculatorpb.SumResponse{
 		Result: result,
 	}
 
 	return res, nil
+}
+
+func (*server) PrimeDecomposition(req *calculatorpb.PrimeDecompositionRequest, stream calculatorpb.CalculatorService_PrimeDecompositionServer) error {
+	fmt.Printf("Prime Decomposition: %v\n", req)
+	n := req.GetA()
+	var k int32
+	k = 2
+
+	for n > 1 {
+		if n%k == 0 {
+			res := &calculatorpb.PrimeDecompositionResponse{
+				Result: k,
+			}
+			stream.Send(res)
+			n = n / k
+		} else {
+			k++
+		}
+	}
+
+	return nil
 }
 
 func main() {

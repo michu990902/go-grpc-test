@@ -4,15 +4,24 @@ package calculator;
 
 option go_package = "calculatorpb";
 
-message CalculatorRequest{
+message SumRequest{
     int32 a = 1;
     int32 b = 2;
 }
 
-message CalculatorResponse{
+message SumResponse{
+    int32 result = 1;
+}
+ 
+message PrimeDecompositionRequest{
+    int32 a = 1;
+}
+
+message PrimeDecompositionResponse{
     int32 result = 1;
 }
 
 service CalculatorService{
-    rpc CalculatorAdd (CalculatorRequest) returns (CalculatorResponse) {};
+    rpc Sum (SumRequest) returns (SumResponse) {};
+    rpc PrimeDecomposition (PrimeDecompositionRequest) returns (stream PrimeDecompositionResponse) {};
 }
