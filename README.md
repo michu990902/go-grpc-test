@@ -9,3 +9,7 @@ Unary: small requests, small response eg. get user
 Client Streaming: big request, small response eg. file upload
 Server streaming: small request, big response eg. get products
 BiDi streaming: big request, big response eg. chat
+
+errors:
+http://avi.im/grpc-errors/
+https://grpc.io/docs/guides/error/
