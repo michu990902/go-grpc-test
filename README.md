@@ -11,5 +11,12 @@ Server streaming: small request, big response eg. get products
 BiDi streaming: big request, big response eg. chat
 
 errors:
-http://avi.im/grpc-errors/
-https://grpc.io/docs/guides/error/
+    http://avi.im/grpc-errors/
+    https://grpc.io/docs/guides/error/
+
+deadlines:
+    always use!!!
+    https://grpc.io/blog/deadlines/
+    good timings: 
+        100ms-1s for small api
+        for long api call: 5 min
