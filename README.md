@@ -20,3 +20,15 @@ deadlines:
     good timings: 
         100ms-1s for small api
         for long api call: 5 min
+
+ssl/tls
+    https://grpc.io/docs/guides/auth/
+
+    cert error:
+        http://www.inanzzz.com/index.php/post/jo4y/using-tls-ssl-certificates-for-grpc-client-and-server-communications-in-golang-updated
+
+
+# https://www.youtube.com/watch?v=jmqLJMFS_yI&feature=emb_logo
+# https://www.youtube.com/watch?v=kVpB-uH6X-s
+https://www.sohamkamani.com/golang/2019-01-01-jwt-authentication/
+https://medium.com/@pliutau/getting-started-with-oauth2-in-go-2c9fae55d187
