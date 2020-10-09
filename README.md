@@ -23,6 +23,10 @@ deadlines:
 
 
 !!!SSL:
-https://www.youtube.com/watch?v=jmqLJMFS_yI&feature=emb_logo
-https://github.com/techschool/pcbook-go
-cd ssl; ./gen.sh
+    https://www.youtube.com/watch?v=jmqLJMFS_yI&feature=emb_logo
+    https://github.com/techschool/pcbook-go
+    cd ssl; ./gen.sh
+
+TODO:
+    makefile
+    https://tutorialedge.net/golang/makefiles-for-go-developers/
