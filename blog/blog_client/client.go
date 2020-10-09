@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/michu990902/go-pb-test/blog/blogpb"
@@ -72,5 +73,22 @@ func main() {
 		fmt.Printf("Error happened while deleting: %v\n", err)
 	}
 	fmt.Printf("Blog was deleted: %v\n", deleteRes)
+
+	//list blog
+	fmt.Println("List the blog")
+	resStream, err := c.ListBlog(context.Background(), &blogpb.ListBlogRequest{})
+	if err != nil {
+		log.Fatalf("Error while calling PrimeDecomposition RPC: %v", err)
+	}
+	for {
+		msg, err := resStream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("Error while reading stream: %v", err)
+		}
+		log.Printf("Result: %v\n", msg.GetBlog())
+	}
 
 }
