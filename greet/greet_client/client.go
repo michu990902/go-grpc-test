@@ -2,21 +2,58 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"time"
 
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
 	"github.com/michu990902/go-pb-test/greet/greetpb"
 	"google.golang.org/grpc"
 )
 
+func loadTLSCredentials() (credentials.TransportCredentials, error) {
+	// Load certificate of the CA who signed server's certificate
+	pemServerCA, err := ioutil.ReadFile("ssl/ca-cert.pem")
+	if err != nil {
+		return nil, err
+	}
+
+	certPool := x509.NewCertPool()
+	if !certPool.AppendCertsFromPEM(pemServerCA) {
+		return nil, fmt.Errorf("failed to add server CA's certificate")
+	}
+
+	// Load client's certificate and private key
+	clientCert, err := tls.LoadX509KeyPair("ssl/client-cert.pem", "ssl/client-key.pem")
+	if err != nil {
+		return nil, err
+	}
+
+	// Create the credentials and return it
+	config := &tls.Config{
+		Certificates: []tls.Certificate{clientCert},
+		RootCAs:      certPool,
+	}
+
+	return credentials.NewTLS(config), nil
+}
+
 func main() {
 	fmt.Println("Client test")
-	cc, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+
+	tlsCredentials, err := loadTLSCredentials()
+	if err != nil {
+		log.Fatalf("Failed to load TLS credentials: %v", err)
+	}
+
+	cc, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(tlsCredentials))
 	if err != nil {
 		log.Fatalf("Cold not connect: %v", err)
 	}
@@ -24,10 +61,10 @@ func main() {
 	defer cc.Close()
 	c := greetpb.NewGreetServiceClient(cc)
 	// fmt.Printf("Created client: %f", c)
-	// doUnary(c)
-	// doServerStreaming(c)
-	// doClientStreaming(c)
-	// doBiDiStreaming(c)
+	doUnary(c)
+	doServerStreaming(c)
+	doClientStreaming(c)
+	doBiDiStreaming(c)
 	doUnaryWithDeadline(c, 1*time.Second)
 	doUnaryWithDeadline(c, 5*time.Second)
 }

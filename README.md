@@ -20,3 +20,9 @@ deadlines:
     good timings: 
         100ms-1s for small api
         for long api call: 5 min
+
+
+!!!SSL:
+https://www.youtube.com/watch?v=jmqLJMFS_yI&feature=emb_logo
+https://github.com/techschool/pcbook-go
+cd ssl; ./gen.sh
