@@ -30,3 +30,5 @@ deadlines:
 TODO:
     makefile
     https://tutorialedge.net/golang/makefiles-for-go-developers/
+    
+    evanscli
